@@ -10,3 +10,7 @@ public/vendor/
 !README.md
 capturas/
 .DS_Store
+
+# El máster del logotipo se conserva en el repositorio, pero no hace falta
+# dentro de la imagen: la aplicación sirve la versión optimizada.
+public/assets/LogoBiocaps-original.png
