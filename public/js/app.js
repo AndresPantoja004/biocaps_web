@@ -79,7 +79,7 @@ BC.app = {
       <div class="login-pantalla">
         <aside class="login-lateral">
           <a class="marca" href="/">
-            <img src="/assets/logo.svg" alt="">
+            <img src="/assets/LogoBiocaps.png" alt="">
             <span class="marca-texto">
               <span class="marca-nombre">BioCaps Monitor<sup>®</sup></span>
               <span class="marca-sub">Biotecnología del agua</span>
@@ -106,7 +106,7 @@ BC.app = {
         <section class="login-panel">
           <div class="login-caja">
             <div class="marca" style="margin-bottom:1.5rem">
-              <img src="/assets/logo.svg" alt="">
+              <img src="/assets/LogoBiocaps.png" alt="">
               <span class="marca-texto">
                 <span class="marca-nombre">BioCaps Monitor<sup>®</sup></span>
                 <span class="marca-sub">Acceso a la plataforma</span>
@@ -175,10 +175,10 @@ BC.app = {
           <div class="seccion-etiqueta" style="font-size:.7rem">Cuentas de demostración</div>
           <div class="roles-demo">
             ${[
-    ['administrador', 'admin@biocaps.ec', 'configura límites y usuarios'],
-    ['analista', 'analista@biocaps.ec', 'registra muestreos y emite reportes'],
-    ['cliente', 'cliente@emapasd.gob.ec', 'consulta sus propios proyectos'],
-  ].map(([rol, email, detalle]) => `
+          ['administrador', 'admin@biocaps.ec', 'configura límites y usuarios'],
+          ['analista', 'analista@biocaps.ec', 'registra muestreos y emite reportes'],
+          ['cliente', 'cliente@emapasd.gob.ec', 'consulta sus propios proyectos'],
+        ].map(([rol, email, detalle]) => `
               <button class="rol-demo" type="button" data-email="${email}">
                 <span class="rol-demo-icono">${BC.icono(BC.iconoRol(rol), { tam: 15 })}</span>
                 <span>
@@ -227,8 +227,8 @@ BC.app = {
       <p class="tenue pequeno">
         Registre su organización para consultar sus proyectos, análisis y reportes.
         ${opciones.requiere_aprobacion
-    ? 'Un administrador de BioCaps revisará la solicitud antes de habilitar el acceso.'
-    : 'El acceso queda habilitado de inmediato.'}
+        ? 'Un administrador de BioCaps revisará la solicitud antes de habilitar el acceso.'
+        : 'El acceso queda habilitado de inmediato.'}
       </p>
 
       <form id="form-registro" style="margin-top:1.2rem">
@@ -403,7 +403,7 @@ BC.app = {
         <aside class="lateral" id="lateral">
           <div class="lateral-marca">
             <a class="marca" href="#/dashboard">
-              <img src="/assets/logo.svg" alt="">
+              <img src="/assets/LogoBiocaps.png" alt="">
               <span class="marca-texto">
                 <span class="marca-nombre">BioCaps Monitor<sup>®</sup></span>
                 <span class="marca-sub">${BC.esc(u.rol)}</span>

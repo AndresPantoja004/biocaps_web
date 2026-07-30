@@ -224,7 +224,7 @@ BC.reportes = (() => {
     const dividir = doc.splitTextToSize.bind(doc);
     doc.splitTextToSize = (texto, ...resto) => dividir(sanear(texto), ...resto);
 
-    const logo = await aPNG('/assets/logo.svg', 240);
+    const logo = await aPNG('/assets/LogoBiocaps.png', 240);
     const p = analisis.proyecto;
     const r = analisis.resumen;
 

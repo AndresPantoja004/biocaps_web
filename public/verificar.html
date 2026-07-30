@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verificación de reporte — BioCaps Monitor®</title>
-  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/LogoBiocaps.png" type="image/svg+xml">
   <link rel="stylesheet" href="/css/estilos.css">
   <link rel="stylesheet" href="/css/app.css">
 </head>
+
 <body>
 
-<main class="verificar-pantalla">
-  <div class="verificar-caja" id="caja">
-    <div class="cargando"><div class="girador"></div><span>Verificando el reporte…</span></div>
-  </div>
-</main>
+  <main class="verificar-pantalla">
+    <div class="verificar-caja" id="caja">
+      <div class="cargando">
+        <div class="girador"></div><span>Verificando el reporte…</span>
+      </div>
+    </div>
+  </main>
 
-<script src="/js/nucleo.js"></script>
-<script src="/js/iconos.js"></script>
-<script>
-(async () => {
-  const caja = document.getElementById('caja');
-  const token = location.pathname.split('/').filter(Boolean).pop();
+  <script src="/js/nucleo.js"></script>
+  <script src="/js/iconos.js"></script>
+  <script>
+    (async () => {
+      const caja = document.getElementById('caja');
+      const token = location.pathname.split('/').filter(Boolean).pop();
 
-  const encabezado = `
+      const encabezado = `
     <div class="marca" style="justify-content:center;margin-bottom:1.5rem">
-      <img src="/assets/logo.svg" alt="">
+      <img src="/assets/LogoBiocaps.png" alt="">
       <span class="marca-texto">
         <span class="marca-nombre">BioCaps Monitor<sup>®</sup></span>
         <span class="marca-sub">Verificación de reportes</span>
       </span>
     </div>`;
 
-  let datos;
-  try {
-    const respuesta = await fetch(`/api/publico/verificar/${encodeURIComponent(token)}`);
-    datos = await respuesta.json();
-  } catch {
-    datos = { valido: false, error: 'No se pudo contactar al servidor.' };
-  }
+      let datos;
+      try {
+        const respuesta = await fetch(`/api/publico/verificar/${encodeURIComponent(token)}`);
+        datos = await respuesta.json();
+      } catch {
+        datos = { valido: false, error: 'No se pudo contactar al servidor.' };
+      }
 
-  if (!datos.valido) {
-    caja.innerHTML = `
+      if (!datos.valido) {
+        caja.innerHTML = `
       ${encabezado}
       <div class="tarjeta centrado">
         <span class="sello-invalido">${BC.icono('cerrar', { tam: 16 })} Reporte no verificado</span>
@@ -52,25 +56,25 @@
         </p>
         <div style="margin-top:1.2rem"><a class="btn btn-fantasma" href="/">Ir al sitio de BioCaps</a></div>
       </div>`;
-    return;
-  }
+        return;
+      }
 
-  const r = datos.reporte;
-  const s = datos.resumen;
+      const r = datos.reporte;
+      const s = datos.resumen;
 
-  const filaParametro = (p) => `
+      const filaParametro = (p) => `
     <tr>
       <td><strong>${BC.esc(p.simbolo)}</strong> <span class="tenue pequeno">${BC.esc(p.unidad || '')}</span></td>
       <td class="num">${p.antes === null || p.antes === undefined ? '—' : BC.esc(String(p.antes))}</td>
       <td class="num"><strong>${p.despues === null || p.despues === undefined ? '—' : BC.esc(String(p.despues))}</strong></td>
       <td class="num">${p.reduccion === null || p.reduccion === undefined ? '—' : BC.pct(p.reduccion)}</td>
       <td>${p.cumple === null || p.cumple === undefined
-        ? '<span class="tenue">n/a</span>'
-        : p.cumple ? '<span class="estado estado-excelente">Cumple</span>'
-                   : '<span class="estado estado-critico">No cumple</span>'}</td>
+          ? '<span class="tenue">n/a</span>'
+          : p.cumple ? '<span class="estado estado-excelente">Cumple</span>'
+            : '<span class="estado estado-critico">No cumple</span>'}</td>
     </tr>`;
 
-  caja.innerHTML = `
+      caja.innerHTML = `
     ${encabezado}
 
     <div class="tarjeta">
@@ -97,17 +101,17 @@
     ${s ? `
       <div class="rejilla rejilla-3" style="margin-top:1.15rem">
         ${BC.indicador({
-          etiqueta: 'Remoción promedio', valor: BC.num(s.reduccion_promedio, 1), unidad: '%',
-          icono: 'tendencia-baja', acento: 'var(--serie-2)',
-        })}
+        etiqueta: 'Remoción promedio', valor: BC.num(s.reduccion_promedio, 1), unidad: '%',
+        icono: 'tendencia-baja', acento: 'var(--serie-2)',
+      })}
         ${BC.indicador({
-          etiqueta: 'Cumplimiento normativo', valor: BC.num(s.cumplimiento_pct, 0), unidad: '%',
-          icono: 'balanza', acento: 'var(--serie-5)',
-        })}
+        etiqueta: 'Cumplimiento normativo', valor: BC.num(s.cumplimiento_pct, 0), unidad: '%',
+        icono: 'balanza', acento: 'var(--serie-5)',
+      })}
         ${BC.indicador({
-          etiqueta: 'Calidad del agua tratada', valor: BC.esc(s.calidad || '—'),
-          icono: 'gota', acento: 'var(--serie-3)',
-        })}
+        etiqueta: 'Calidad del agua tratada', valor: BC.esc(s.calidad || '—'),
+        icono: 'gota', acento: 'var(--serie-3)',
+      })}
       </div>
 
       ${s.parametros?.length ? `
@@ -128,7 +132,8 @@
       Documento verificado contra la base de datos de BioCaps Monitor® el ${new Date().toLocaleString('es-EC')}.
       <br><a href="/">Conocer BioCaps</a>
     </p>`;
-})();
-</script>
+    })();
+  </script>
 </body>
+
 </html>
