@@ -106,9 +106,19 @@ BC.reportes = (() => {
     doc.setFillColor(...C.marca);
     doc.rect(0, 0, ANCHO, altoBanda, 'F');
 
+    // El logotipo se encaja dentro de un cuadrado conservando su proporción:
+    // una imagen vertical estirada a la fuerza se vería deformada en el informe.
+    let anchoLogo = 0;
     if (logo) {
       const lado = primeraPagina ? 19 : 10;
-      doc.addImage(logo.datos, 'PNG', MARGEN, (altoBanda - lado) / 2, lado, lado);
+      const proporcion = logo.ancho / logo.alto;
+      const alto = proporcion >= 1 ? lado / proporcion : lado;
+      anchoLogo = proporcion >= 1 ? lado : lado * proporcion;
+      doc.addImage(
+        logo.datos, 'PNG',
+        MARGEN + (lado - anchoLogo) / 2, (altoBanda - alto) / 2,
+        anchoLogo, alto,
+      );
     }
 
     const x = MARGEN + (primeraPagina ? 24 : 14);

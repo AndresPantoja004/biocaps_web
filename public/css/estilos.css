@@ -140,7 +140,13 @@ a:hover { text-decoration: underline; }
 /* ------------------------------- Marca ------------------------------- */
 
 .marca { display: flex; align-items: center; gap: .7rem; }
-.marca img { width: 42px; height: 42px; filter: drop-shadow(0 3px 10px rgba(46, 230, 168, .35)); }
+/* `object-fit: contain` conserva la proporción del logotipo: sin él, una imagen
+   vertical (por ejemplo 1024 × 1536) se deforma al forzarla a una caja cuadrada. */
+.marca img {
+  width: 42px; height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 10px rgba(46, 230, 168, .35));
+}
 .marca-texto { display: flex; flex-direction: column; line-height: 1.1; }
 .marca-nombre { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; font-size: 1.06rem; }
 .marca-sub { font-size: .68rem; color: var(--brand); letter-spacing: .16em; text-transform: uppercase; }
