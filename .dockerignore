@@ -1,0 +1,12 @@
+node_modules/
+data/
+uploads/
+public/vendor/
+.git/
+.gitignore
+.env
+*.log
+*.md
+!README.md
+capturas/
+.DS_Store

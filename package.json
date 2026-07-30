@@ -1,0 +1,30 @@
+{
+  "name": "biocaps-monitor",
+  "version": "1.0.0",
+  "description": "BioCaps Monitor® — Plataforma inteligente de monitoreo de tratamiento de aguas residuales con biocápsulas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "seed": "node src/seed.js",
+    "reset": "node src/seed.js --reset",
+    "vendor": "node scripts/vendor.js",
+    "postinstall": "node scripts/vendor.js"
+  },
+  "keywords": [
+    "biotecnologia",
+    "aguas-residuales",
+    "biocapsulas",
+    "monitoreo"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^4.4.7",
+    "express": "^4.21.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "leaflet": "^1.9.4",
+    "multer": "^2.0.0",
+    "qrcode": "^1.5.4"
+  }
+}

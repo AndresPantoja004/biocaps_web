@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="BioCaps Monitor">
+  <defs>
+    <linearGradient id="capsula" x1="18" y1="14" x2="78" y2="82" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5ff0c0"/>
+      <stop offset="0.55" stop-color="#199e70"/>
+      <stop offset="1" stop-color="#0e6b53"/>
+    </linearGradient>
+    <linearGradient id="gota" x1="34" y1="20" x2="62" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#bff8e4" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#3987e5" stop-opacity="0.65"/>
+    </linearGradient>
+    <radialGradient id="brillo" cx="0.35" cy="0.28" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- membrana de la biocápsula (alginato) -->
+  <circle cx="48" cy="48" r="41" fill="none" stroke="url(#capsula)" stroke-width="3.5" opacity="0.9"/>
+  <circle cx="48" cy="48" r="35" fill="#062b21" opacity="0.55"/>
+  <circle cx="48" cy="48" r="35" fill="url(#brillo)"/>
+
+  <!-- puntos de reticulación CaCl2 sobre la membrana -->
+  <g fill="#5ff0c0">
+    <circle cx="48" cy="7" r="2.6"/><circle cx="77" cy="19" r="2.1"/><circle cx="89" cy="48" r="2.6"/>
+    <circle cx="77" cy="77" r="2.1"/><circle cx="48" cy="89" r="2.6"/><circle cx="19" cy="77" r="2.1"/>
+    <circle cx="7" cy="48" r="2.6"/><circle cx="19" cy="19" r="2.1"/>
+  </g>
+
+  <!-- gota de agua tratada -->
+  <path d="M48 22c9.5 11.4 15 19.2 15 25.8A15 15 0 0 1 33 47.8C33 41.2 38.5 33.4 48 22Z"
+        fill="url(#gota)" opacity="0.85"/>
+
+  <!-- hélice de ADN: consorcio bacteriano encapsulado -->
+  <g stroke="#eafff7" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.95">
+    <path d="M40 34c8 5.5 8 11.5 0 17s-8 11.5 0 17"/>
+    <path d="M56 34c-8 5.5-8 11.5 0 17s8 11.5 0 17"/>
+  </g>
+  <g stroke="#5ff0c0" stroke-width="2" stroke-linecap="round" opacity="0.85">
+    <line x1="41.5" y1="38.5" x2="54.5" y2="38.5"/>
+    <line x1="45" y1="46" x2="51" y2="46"/>
+    <line x1="41.5" y1="55.5" x2="54.5" y2="55.5"/>
+    <line x1="45" y1="63" x2="51" y2="63"/>
+  </g>
+</svg>

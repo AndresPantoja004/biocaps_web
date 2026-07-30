@@ -1,0 +1,76 @@
+# ============================================================================
+# BioCaps Monitor® — Despliegue con Docker Compose
+#
+#   cp .env.example .env      y edite BIOCAPS_SECRET y BIOCAPS_URL
+#   docker compose up -d --build
+#   docker compose exec biocaps npm run seed     (datos de demostración)
+#
+# Los datos viven en volúmenes: recrear el contenedor no los borra.
+# ============================================================================
+
+services:
+  biocaps:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: biocaps-monitor:1.0.0
+    container_name: biocaps
+    restart: unless-stopped
+
+    # Las variables se leen del archivo .env; los valores de abajo son el
+    # respaldo si alguna no está definida.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      BIOCAPS_DATA_DIR: /datos
+      BIOCAPS_UPLOADS_DIR: /subidas
+      # URL pública: se incrusta en los códigos QR de los reportes.
+      BIOCAPS_URL: ${BIOCAPS_URL:-http://localhost:8080}
+      # Secreto de firma de sesiones. Genérelo con:
+      #   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+      BIOCAPS_SECRET: ${BIOCAPS_SECRET:?defina BIOCAPS_SECRET en el archivo .env}
+      BIOCAPS_REGISTRO_PUBLICO: ${BIOCAPS_REGISTRO_PUBLICO:-true}
+      BIOCAPS_REGISTRO_APROBACION: ${BIOCAPS_REGISTRO_APROBACION:-false}
+      BIOCAPS_TRAS_PROXY: ${BIOCAPS_TRAS_PROXY:-true}
+      BIOCAPS_COOKIE_SEGURA: ${BIOCAPS_COOKIE_SEGURA:-false}
+      BIOCAPS_SEMILLA_AUTO: ${BIOCAPS_SEMILLA_AUTO:-false}
+      TZ: ${TZ:-America/Guayaquil}
+
+    ports:
+      - "${BIOCAPS_PUERTO:-8080}:3000"
+
+    volumes:
+      - biocaps_datos:/datos
+      - biocaps_subidas:/subidas
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:3000/api/salud"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+    # Endurecimiento básico del contenedor.
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+    tmpfs:
+      - /tmp
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+volumes:
+  biocaps_datos:
+    name: biocaps_datos
+  biocaps_subidas:
+    name: biocaps_subidas

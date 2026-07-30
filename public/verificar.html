@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verificación de reporte — BioCaps Monitor®</title>
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/estilos.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+<main class="verificar-pantalla">
+  <div class="verificar-caja" id="caja">
+    <div class="cargando"><div class="girador"></div><span>Verificando el reporte…</span></div>
+  </div>
+</main>
+
+<script src="/js/nucleo.js"></script>
+<script src="/js/iconos.js"></script>
+<script>
+(async () => {
+  const caja = document.getElementById('caja');
+  const token = location.pathname.split('/').filter(Boolean).pop();
+
+  const encabezado = `
+    <div class="marca" style="justify-content:center;margin-bottom:1.5rem">
+      <img src="/assets/logo.svg" alt="">
+      <span class="marca-texto">
+        <span class="marca-nombre">BioCaps Monitor<sup>®</sup></span>
+        <span class="marca-sub">Verificación de reportes</span>
+      </span>
+    </div>`;
+
+  let datos;
+  try {
+    const respuesta = await fetch(`/api/publico/verificar/${encodeURIComponent(token)}`);
+    datos = await respuesta.json();
+  } catch {
+    datos = { valido: false, error: 'No se pudo contactar al servidor.' };
+  }
+
+  if (!datos.valido) {
+    caja.innerHTML = `
+      ${encabezado}
+      <div class="tarjeta centrado">
+        <span class="sello-invalido">${BC.icono('cerrar', { tam: 16 })} Reporte no verificado</span>
+        <h2 style="margin-top:1rem">Este código no corresponde a un reporte vigente</h2>
+        <p class="tenue">${BC.esc(datos.error || 'Código de verificación desconocido.')}</p>
+        <p class="pequeno tenue" style="margin-bottom:0">
+          Si recibió este documento de un tercero, solicite una copia emitida directamente por BioCaps.
+        </p>
+        <div style="margin-top:1.2rem"><a class="btn btn-fantasma" href="/">Ir al sitio de BioCaps</a></div>
+      </div>`;
+    return;
+  }
+
+  const r = datos.reporte;
+  const s = datos.resumen;
+
+  const filaParametro = (p) => `
+    <tr>
+      <td><strong>${BC.esc(p.simbolo)}</strong> <span class="tenue pequeno">${BC.esc(p.unidad || '')}</span></td>
+      <td class="num">${p.antes === null || p.antes === undefined ? '—' : BC.esc(String(p.antes))}</td>
+      <td class="num"><strong>${p.despues === null || p.despues === undefined ? '—' : BC.esc(String(p.despues))}</strong></td>
+      <td class="num">${p.reduccion === null || p.reduccion === undefined ? '—' : BC.pct(p.reduccion)}</td>
+      <td>${p.cumple === null || p.cumple === undefined
+        ? '<span class="tenue">n/a</span>'
+        : p.cumple ? '<span class="estado estado-excelente">Cumple</span>'
+                   : '<span class="estado estado-critico">No cumple</span>'}</td>
+    </tr>`;
+
+  caja.innerHTML = `
+    ${encabezado}
+
+    <div class="tarjeta">
+      <div class="centrado" style="margin-bottom:1.4rem">
+        <span class="sello-valido">${BC.icono('check-circulo', { tam: 16 })} Reporte auténtico</span>
+        <h2 style="margin-top:.9rem">${BC.esc(r.codigo)}</h2>
+        <p class="tenue pequeno" style="margin:0">${BC.esc(r.titulo || '')}</p>
+      </div>
+
+      <div class="datos-lista">
+        <div class="dato"><div class="dato-etiqueta">Cliente</div><div class="dato-valor">${BC.esc(r.cliente_nombre)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Tipo de cliente</div><div class="dato-valor">${BC.esc(r.cliente_tipo)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Proyecto</div><div class="dato-valor">${BC.esc(r.proyecto_nombre)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Tipo de agua</div><div class="dato-valor">${BC.esc(r.tipo_agua)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Ubicación</div><div class="dato-valor">${BC.esc(r.ubicacion || '—')}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Fecha de emisión</div><div class="dato-valor">${BC.fechaHora(r.created_at)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Muestra antes</div><div class="dato-valor">${BC.esc(r.muestreo_antes || '—')} · ${BC.fecha(r.fecha_antes)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Muestra después</div><div class="dato-valor">${BC.esc(r.muestreo_despues || '—')} · ${BC.fecha(r.fecha_despues)}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Firmado por</div><div class="dato-valor">${BC.esc(r.firma_nombre || '—')}</div></div>
+        <div class="dato"><div class="dato-etiqueta">Cargo</div><div class="dato-valor">${BC.esc(r.firma_cargo || '—')}</div></div>
+      </div>
+    </div>
+
+    ${s ? `
+      <div class="rejilla rejilla-3" style="margin-top:1.15rem">
+        ${BC.indicador({
+          etiqueta: 'Remoción promedio', valor: BC.num(s.reduccion_promedio, 1), unidad: '%',
+          icono: 'tendencia-baja', acento: 'var(--serie-2)',
+        })}
+        ${BC.indicador({
+          etiqueta: 'Cumplimiento normativo', valor: BC.num(s.cumplimiento_pct, 0), unidad: '%',
+          icono: 'balanza', acento: 'var(--serie-5)',
+        })}
+        ${BC.indicador({
+          etiqueta: 'Calidad del agua tratada', valor: BC.esc(s.calidad || '—'),
+          icono: 'gota', acento: 'var(--serie-3)',
+        })}
+      </div>
+
+      ${s.parametros?.length ? `
+        <div class="tarjeta" style="margin-top:1.15rem">
+          <div class="tarjeta-titulo"><h3>Resultados certificados</h3></div>
+          <div class="tabla-envoltura">
+            <table>
+              <thead>
+                <tr><th>Parámetro</th><th class="num">Antes</th><th class="num">Después</th>
+                    <th class="num">Remoción</th><th>Cumplimiento</th></tr>
+              </thead>
+              <tbody>${s.parametros.map(filaParametro).join('')}</tbody>
+            </table>
+          </div>
+        </div>` : ''}` : ''}
+
+    <p class="pequeno tenue centrado" style="margin-top:1.4rem">
+      Documento verificado contra la base de datos de BioCaps Monitor® el ${new Date().toLocaleString('es-EC')}.
+      <br><a href="/">Conocer BioCaps</a>
+    </p>`;
+})();
+</script>
+</body>
+</html>
